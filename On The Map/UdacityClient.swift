@@ -54,6 +54,24 @@ class UdacityClient: NSObject {
         return task
     }
     
+    func taskForGETMethod(parameter: String, completionHandlerForGET: CompletionHandler) -> NSURLSessionDataTask {
+        
+        let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameter))
+        
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil {
+                return
+            }
+            
+            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5))
+            self.convertDataWithCompletionHandler(newData, completionHandlerForConvertData: completionHandlerForGET)
+        }
+        
+        task.resume()
+        
+        return task
+    }
+    
     private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: CompletionHandler) {
         
         var parsedResult: AnyObject!

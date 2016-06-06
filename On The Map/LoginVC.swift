@@ -74,7 +74,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                 return
             }
             
-            DataService.sharedInstance.setUser(user)
+            DataService.sharedInstance.userId = user
             performUIUpdatesOnMain {
                 self.dismissViewControllerAnimated(true, completion: nil)
             }
@@ -189,7 +189,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                                 return
                             }
                             
-                            DataService.sharedInstance.setUser(user)
+                            DataService.sharedInstance.userId = user
                             successBlock()
                         }
                     })

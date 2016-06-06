@@ -16,7 +16,7 @@ extension UdacityClient {
     
     struct Methods {
         static let Session = "/session"
-        static let User = "/users/\(DataService.sharedInstance.userId)"
+        static let User = "/users"
     }
     
     struct JSONBodyKeys {

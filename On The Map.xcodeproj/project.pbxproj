@@ -24,6 +24,9 @@
 		2BA323351D03F3AD0001B749 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA323341D03F3AD0001B749 /* Constants.swift */; };
 		2BA323381D043E210001B749 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BA323361D043E210001B749 /* FBSDKCoreKit.framework */; };
 		2BA323391D043E210001B749 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BA323371D043E210001B749 /* FBSDKLoginKit.framework */; };
+		2BA3233F1D04CAB70001B749 /* ParseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3233E1D04CAB70001B749 /* ParseClient.swift */; };
+		2BA323411D04D4AE0001B749 /* ParseConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA323401D04D4AE0001B749 /* ParseConstants.swift */; };
+		2BA323431D0500C90001B749 /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA323421D0500C90001B749 /* StudentInformation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +50,9 @@
 		2BA323361D043E210001B749 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		2BA323371D043E210001B749 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		2BA3233A1D043F800001B749 /* On The Map-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "On The Map-Bridging-Header.h"; sourceTree = "<group>"; };
+		2BA3233E1D04CAB70001B749 /* ParseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseClient.swift; sourceTree = "<group>"; };
+		2BA323401D04D4AE0001B749 /* ParseConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseConstants.swift; sourceTree = "<group>"; };
+		2BA323421D0500C90001B749 /* StudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				2BA3232D1D03C1E40001B749 /* Clients */,
+				2BA323421D0500C90001B749 /* StudentInformation.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -139,11 +146,11 @@
 		2BA3231F1D038ECC0001B749 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				2BA323361D043E210001B749 /* FBSDKCoreKit.framework */,
-				2BA323371D043E210001B749 /* FBSDKLoginKit.framework */,
 				2BA323341D03F3AD0001B749 /* Constants.swift */,
 				2BA323081D038DE10001B749 /* AppDelegate.swift */,
 				2BA3233A1D043F800001B749 /* On The Map-Bridging-Header.h */,
+				2BA323361D043E210001B749 /* FBSDKCoreKit.framework */,
+				2BA323371D043E210001B749 /* FBSDKLoginKit.framework */,
 				2BA323281D039B4E0001B749 /* Roboto-Bold.ttf */,
 				2BA323141D038DE10001B749 /* Info.plist */,
 			);
@@ -163,9 +170,19 @@
 		2BA3232D1D03C1E40001B749 /* Clients */ = {
 			isa = PBXGroup;
 			children = (
+				2BA3233D1D04CA980001B749 /* Parse */,
 				2BA3232C1D03C04D0001B749 /* Udacity */,
 			);
 			name = Clients;
+			sourceTree = "<group>";
+		};
+		2BA3233D1D04CA980001B749 /* Parse */ = {
+			isa = PBXGroup;
+			children = (
+				2BA3233E1D04CAB70001B749 /* ParseClient.swift */,
+				2BA323401D04D4AE0001B749 /* ParseConstants.swift */,
+			);
+			name = Parse;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -240,13 +257,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BA323431D0500C90001B749 /* StudentInformation.swift in Sources */,
 				2BA3232F1D03C20E0001B749 /* UdacityClient.swift in Sources */,
 				2BA323351D03F3AD0001B749 /* Constants.swift in Sources */,
 				2BA323251D03967D0001B749 /* LocationVC.swift in Sources */,
 				2BA323231D0396590001B749 /* ListVC.swift in Sources */,
 				2BA323331D03C3040001B749 /* UdacityConvenience.swift in Sources */,
 				2BA3230B1D038DE10001B749 /* MapVC.swift in Sources */,
+				2BA3233F1D04CAB70001B749 /* ParseClient.swift in Sources */,
 				2BA323271D0397560001B749 /* DataService.swift in Sources */,
+				2BA323411D04D4AE0001B749 /* ParseConstants.swift in Sources */,
 				2BA323311D03C2C10001B749 /* UdacityConstants.swift in Sources */,
 				2BA3232B1D03A4020001B749 /* CustomButton.swift in Sources */,
 				2BA323091D038DE10001B749 /* AppDelegate.swift in Sources */,
