@@ -100,8 +100,8 @@
 		2BA3231A1D038E9B0001B749 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				2BA3232D1D03C1E40001B749 /* Clients */,
 				2BA323421D0500C90001B749 /* StudentInformation.swift */,
+				2BA3232D1D03C1E40001B749 /* Clients */,
 			);
 			name = Model;
 			sourceTree = "<group>";

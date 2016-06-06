@@ -16,6 +16,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var udacitySignupButton: UIButton!
     @IBOutlet weak var facebookLoginButton: CustomButton!
     
+    let facebookReadPermissions = ["public_profile", "email"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -101,7 +103,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func setUIEnabled(enable: Bool) {
+    private func setUIEnabled(enable: Bool) {
         emailAddressTextField.enabled = enable
         passwordTextField.enabled = enable
         udacityLoginButton.enabled = enable
@@ -136,9 +138,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         presentViewController(alert, animated: true, completion: nil)
     }
     
-    let facebookReadPermissions = ["public_profile", "email"]
-    
-    func loginToFacebookWithSuccess(callingViewController: UIViewController, successBlock: () -> (), andFailure failureBlock: (NSError?) -> ()) {
+    private func loginToFacebookWithSuccess(callingViewController: UIViewController, successBlock: () -> (), andFailure failureBlock: (NSError?) -> ()) {
         
         if FBSDKAccessToken.currentAccessToken() != nil {
             return
