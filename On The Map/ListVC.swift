@@ -75,6 +75,27 @@ class ListVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func logout() {
-        performSegueWithIdentifier("logoutScreen", sender: nil)
+        let alert = UIAlertController(title: "Logging Out", message: "Are you sure you want to logout?", preferredStyle: .Alert)
+        let action = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+        alert.addAction(action)
+        let retry = UIAlertAction(title: "Logout", style: .Destructive) { (action) in
+            if FBSDKAccessToken.currentAccessToken() != nil {
+                FBSDKLoginManager().logOut()
+            }
+            DataService.sharedInstance.logoutUser()
+            
+            UdacityClient.sharedInstance().taskForDELETEMethod(UdacityClient.Methods.Session, completionHandlerForDelete: { (result, error) in
+                performUIUpdatesOnMain {
+                    if error == nil {
+                        self.performSegueWithIdentifier("logoutScreen", sender: nil)
+                        
+                    } else {
+                        self.showErrorAlert("Unable To Logout", msg: "Please logout again.")
+                    }
+                }
+            })
+        }
+        alert.addAction(retry)
+        presentViewController(alert, animated: true, completion: nil)
     }
 }

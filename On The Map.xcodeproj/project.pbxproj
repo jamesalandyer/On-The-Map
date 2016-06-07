@@ -20,7 +20,6 @@
 		2BA3232B1D03A4020001B749 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3232A1D03A4020001B749 /* CustomButton.swift */; };
 		2BA3232F1D03C20E0001B749 /* UdacityClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3232E1D03C20E0001B749 /* UdacityClient.swift */; };
 		2BA323311D03C2C10001B749 /* UdacityConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA323301D03C2C10001B749 /* UdacityConstants.swift */; };
-		2BA323331D03C3040001B749 /* UdacityConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA323321D03C3040001B749 /* UdacityConvenience.swift */; };
 		2BA323351D03F3AD0001B749 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA323341D03F3AD0001B749 /* Constants.swift */; };
 		2BA323391D043E210001B749 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BA323371D043E210001B749 /* FBSDKLoginKit.framework */; };
 		2BA3233F1D04CAB70001B749 /* ParseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3233E1D04CAB70001B749 /* ParseClient.swift */; };
@@ -46,7 +45,6 @@
 		2BA3232A1D03A4020001B749 /* CustomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		2BA3232E1D03C20E0001B749 /* UdacityClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityClient.swift; sourceTree = "<group>"; };
 		2BA323301D03C2C10001B749 /* UdacityConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConstants.swift; sourceTree = "<group>"; };
-		2BA323321D03C3040001B749 /* UdacityConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConvenience.swift; sourceTree = "<group>"; };
 		2BA323341D03F3AD0001B749 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2BA323371D043E210001B749 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		2BA3233A1D043F800001B749 /* On The Map-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "On The Map-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -165,7 +163,6 @@
 			children = (
 				2BA3232E1D03C20E0001B749 /* UdacityClient.swift */,
 				2BA323301D03C2C10001B749 /* UdacityConstants.swift */,
-				2BA323321D03C3040001B749 /* UdacityConvenience.swift */,
 			);
 			name = Udacity;
 			sourceTree = "<group>";
@@ -266,7 +263,6 @@
 				2BA323351D03F3AD0001B749 /* Constants.swift in Sources */,
 				2BA323251D03967D0001B749 /* LocationVC.swift in Sources */,
 				2BA323231D0396590001B749 /* ListVC.swift in Sources */,
-				2BA323331D03C3040001B749 /* UdacityConvenience.swift in Sources */,
 				2BA3230B1D038DE10001B749 /* MapVC.swift in Sources */,
 				2BA3233F1D04CAB70001B749 /* ParseClient.swift in Sources */,
 				2BA323271D0397560001B749 /* DataService.swift in Sources */,

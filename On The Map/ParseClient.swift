@@ -40,9 +40,9 @@ class ParseClient: NSObject {
         return task
     }
     
-    func taskForPOSTMethod(method: String, parameters: [String: AnyObject], jsonBody: String, completionHandlerForPost: CompletionHandler) -> NSURLSessionDataTask {
+    func taskForPOSTMethod(method: String, jsonBody: String, path: String?, completionHandlerForPost: CompletionHandler) -> NSURLSessionDataTask {
         
-        let request = NSMutableURLRequest(URL: parseURLFromParameters(parameters))
+        let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: (path ?? "")))
         request.HTTPMethod = method
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
@@ -83,17 +83,19 @@ class ParseClient: NSObject {
         completionHandlerForConvertData(result: parsedResult, error: nil)
     }
     
-    private func parseURLFromParameters(parameters: [String: AnyObject]) -> NSURL {
+    private func parseURLFromParameters(parameters: [String: AnyObject]?, withPathExtension: String? = nil) -> NSURL {
         
         let components = NSURLComponents()
         components.scheme = ParseClient.Constants.ApiScheme
         components.host = ParseClient.Constants.ApiHost
-        components.path = ParseClient.Constants.ApiPath
+        components.path = ParseClient.Constants.ApiPath + (withPathExtension ?? "")
         components.queryItems = [NSURLQueryItem]()
         
-        for (key, value) in parameters {
-            let queryItem = NSURLQueryItem(name: key, value: "\(value)")
-            components.queryItems!.append(queryItem)
+        if parameters != nil {
+            for (key, value) in parameters! {
+                let queryItem = NSURLQueryItem(name: key, value: "\(value)")
+                components.queryItems!.append(queryItem)
+            }
         }
         
         return components.URL!

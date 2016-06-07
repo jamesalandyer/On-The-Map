@@ -40,9 +40,9 @@ class LocationVC: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
     }
     
     @IBAction func findOnMapButtonPressed(sender: AnyObject) {
-        setUI(false, locationScreen: true)
+        setUI(false)
         guard let text = locationTextField.text where text != "" else {
-            //print error
+            showAlert("Invalid Location", msg: "Please enter a location.", update: nil)
             return
         }
         geocodeAddress(text) { (success) in
@@ -52,32 +52,37 @@ class LocationVC: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
                 self.userInformation["mapString"] = text
                 
                 performUIUpdatesOnMain {
-                    self.setUI(true, locationScreen: true)
+                    self.setUI(true)
                     self.urlScreenHidden(false)
                     self.setLocationPin()
                 }
             } else {
-                //show error
+                self.showAlert("Unable To Find Location", msg: "Please double check your location and try again.", update: nil)
             }
         }
     }
     
     @IBAction func submitButtonPressed(sender: AnyObject) {
+        setUI(false)
         guard let text = urlTextField.text where text != "" else {
-            //print error
+            showAlert("Invalid Url", msg: "Please enter a url.", update: nil)
             return
         }
         userInformation["mediaURL"] = text
         
-        let student = StudentInformation(student: userInformation)
-        let jsonBody = "{\"uniqueKey\": \"\(DataService.sharedInstance.userId)\", \"firstName\": \"\(student.firstName)\", \"lastName\": \"\(student.lastName)\",\"mapString\": \"\(student.mapString)\", \"mediaURL\": \"\(student.mediaURL)\",\"latitude\": \(student.latitude), \"longitude\": \(student.longitude)}"
-        
         checkIfPostExists { (success) in
             if success {
-                
+                self.showAlert("You Already Have Posted", msg: "Do you want to update your post?", update: true)
             } else {
-                print("NO")
-                print(jsonBody)
+                self.sendPost(ParseClient.Methods.Post, path: nil, completed: { (success) in
+                    performUIUpdatesOnMain {
+                        if success {
+                            self.dismissViewControllerAnimated(true, completion: nil)
+                        } else {
+                            self.showAlert("Unable To Send Post", msg: "Your post was unable to send. Please try again.", update: false)
+                        }
+                    }
+                })
             }
         }
     }
@@ -89,7 +94,7 @@ class LocationVC: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
         
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.canShowCallout = false
+            pinView!.canShowCallout = true
             pinView!.pinTintColor = lightBlueColor
         }
         else {
@@ -121,7 +126,6 @@ class LocationVC: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
     func geocodeAddress(address: String, completed: (success: Bool) -> Void) {
         CLGeocoder().geocodeAddressString(address) { (placemarks, error) in
             if error != nil {
-                print("ERROR")
                 completed(success: false)
                 return
             }
@@ -137,7 +141,6 @@ class LocationVC: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
                 
                 completed(success: true)
             } else {
-                print("ERROR")
                 completed(success: false)
             }
         }
@@ -151,6 +154,7 @@ class LocationVC: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
             
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
+        annotation.title = "YOU"
         
         locationMapView.addAnnotation(annotation)
     }
@@ -162,7 +166,7 @@ class LocationVC: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
         locationMapView.hidden = hidden
     }
     
-    func setUI(enable: Bool, locationScreen: Bool) {
+    func setUI(enable: Bool) {
         
         if enable {
             loadingIndicator.removeFromSuperview()
@@ -171,19 +175,17 @@ class LocationVC: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
             view.addSubview(loadingIndicator)
             loadingIndicator.startAnimating()
         }
-        if locationScreen {
-            locationTextField.enabled = enable
-            findOnMapButton.enabled = enable
-        } else {
-            urlTextField.enabled = enable
-            submitButton.enabled = enable
-        }
+        locationTextField.enabled = enable
+        findOnMapButton.enabled = enable
+        urlTextField.enabled = enable
+        submitButton.enabled = enable
     }
     
     func checkIfPostExists(completed: (success: Bool) -> Void) {
         let parameter = [
-            "where": "%7B%22uniqueKey%22%3A%22\(DataService.sharedInstance.userId)%22%7D"
+            "where": "{\"uniqueKey\":\"\(DataService.sharedInstance.userId)\"}"
         ]
+        
         ParseClient.sharedInstance().taskForGETMethod(parameter) { (result, error) in
             if error != nil {
                 completed(success: false)
@@ -205,23 +207,56 @@ class LocationVC: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
         }
     }
     
-    func createPost(information: StudentInformation, jsonBody: String, completed: (success: Bool) -> Void) {
-        ParseClient.sharedInstance().taskForPOSTMethod("POST", parameters: [String: AnyObject](), jsonBody: jsonBody) { (result, error) in
+    func sendPost(method: String, path: String?, completed: (success: Bool) -> Void) {
+        let student = StudentInformation(student: userInformation)
+        let jsonBody = "{\"uniqueKey\": \"\(DataService.sharedInstance.userId)\", \"firstName\": \"\(student.firstName)\", \"lastName\": \"\(student.lastName)\",\"mapString\": \"\(student.mapString)\", \"mediaURL\": \"\(student.mediaURL)\",\"latitude\": \(student.latitude), \"longitude\": \(student.longitude)}"
+        
+        ParseClient.sharedInstance().taskForPOSTMethod(method, jsonBody: jsonBody, path: (path ?? "")) { (result, error) in
             if error != nil {
                 completed(success: false)
                 return
             }
             
-            guard (result["objectId"] as? String) != nil else {
-                completed(success: false)
-                return
+            if method == ParseClient.Methods.Post {
+                guard (result["objectId"] as? String) != nil else {
+                    completed(success: false)
+                    return
+                }
+            } else {
+                guard (result["updatedAt"] as? String) != nil else {
+                    completed(success: false)
+                    return
+                }
             }
+            
             
             completed(success: true)
         }
     }
     
-    func updatePost(information: StudentInformation, jsonBody: String, completed: (success: Bool) -> Void) {
-        
+    private func showAlert(title: String, msg: String, update: Bool?) {
+        var button = "Ok"
+        let alert = UIAlertController(title: title, message: msg, preferredStyle: .Alert)
+        if update != nil {
+            let send = UIAlertAction(title: "Update", style: .Default) { (action) in
+                self.sendPost(ParseClient.Methods.Put, path: "/\(self.previousPostObjectId)", completed: { (success) in
+                    performUIUpdatesOnMain {
+                        if success {
+                           self.dismissViewControllerAnimated(true, completion: nil)
+                        } else {
+                            self.showAlert("Unable To Update Post", msg: "Please try again", update: true)
+                        }
+                    }
+                })
+            }
+            alert.addAction(send)
+            button = "Cancel"
+        }
+        let action = UIAlertAction(title: button, style: .Default, handler: nil)
+        alert.addAction(action)
+        performUIUpdatesOnMain {
+            self.presentViewController(alert, animated: true, completion: nil)
+            self.setUI(true)
+        }
     }
 }
