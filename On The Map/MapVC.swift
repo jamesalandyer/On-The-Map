@@ -27,21 +27,13 @@ class MapVC: UIViewController, MKMapViewDelegate {
     }
     
     override func viewDidAppear(animated: Bool) {
-        if !userIsLoggedIn() {
+        if !DataService.sharedInstance.userLoggedIn {
             performSegueWithIdentifier("loginScreen", sender: nil)
         } else {
             if !hasUserInformation() {
                 refreshData(true)
             }
         }
-    }
-    
-    private func userIsLoggedIn() -> Bool {
-        if DataService.sharedInstance.userId == FIELD_EMPTY {
-            return false
-        }
-        
-        return true
     }
     
     private func hasUserInformation() -> Bool {
@@ -291,7 +283,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 }
             }
         }
-        if !hasName && userIsLoggedIn() {
+        if !hasName && DataService.sharedInstance.userLoggedIn {
             getUserInformation { (success) in
                 performUIUpdatesOnMain {
                     if success {
@@ -320,7 +312,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
         if FBSDKAccessToken.currentAccessToken() != nil {
             FBSDKLoginManager().logOut()
         }
-        NSUserDefaults.standardUserDefaults().removeObjectForKey("user")
+        DataService.sharedInstance.logoutUser()
         let current = "\(tabBarController?.selectedViewController)"
         
         if current.containsString("MapVC") {

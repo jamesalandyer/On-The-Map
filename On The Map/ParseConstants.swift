@@ -14,4 +14,9 @@ extension ParseClient {
         static let ApiPath = "/1/classes/StudentLocation"
     }
     
+    struct Methods {
+        static let Post = "POST"
+        static let Put = "PUT"
+    }
+    
 }
