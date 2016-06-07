@@ -13,26 +13,17 @@ class MapVC: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     
+    var annotations = [MKPointAnnotation]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         mapView.delegate = self
         
-        tabBarController?.navigationItem.title = "On The Map"
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        if !hasLocationInformation() {
-            getStudentLocations { (success) in
-                if success {
-                    performUIUpdatesOnMain({ 
-                        self.setStudentLocationPins()
-                    })
-                } else {
-                    self.showErrorAlert("Student Locations Couldn't Be Loaded", msg: "You are unable to view student locations.", type: "locations")
-                }
-            }
-        }
+        tabBarController?.navigationItem.title = "ON THE MAP"
+        tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName: lightBlueColor], forState: .Selected)
+        
+        refreshData(false)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -40,13 +31,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
             performSegueWithIdentifier("loginScreen", sender: nil)
         } else {
             if !hasUserInformation() {
-                getUserInformation { (success) in
-                    if success {
-                        
-                    } else {
-                        self.showErrorAlert("User Information Couldn't Be Loaded", msg: "You are unable to post a pin.", type: "user")
-                    }
-                }
+                refreshData(true)
             }
         }
     }
@@ -111,6 +96,8 @@ class MapVC: UIViewController, MKMapViewDelegate {
     
     private func getStudentLocations(completed: (success: Bool) -> Void) {
         
+        DataService.sharedInstance.emptyStudentLocations()
+        
         let parameters = [
             "limit": 100,
             "order": "-updatedAt"
@@ -148,7 +135,9 @@ class MapVC: UIViewController, MKMapViewDelegate {
     private func setStudentLocationPins() {
         let locations = DataService.sharedInstance.studentLocations
         
-        var annotations = [MKPointAnnotation]()
+        mapView.removeAnnotations(self.annotations)
+        
+        annotations = [MKPointAnnotation]()
         
         for location in locations {
             
@@ -181,7 +170,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
-            pinView!.pinTintColor = UIColor(red: 90 / 255, green: 200 / 255, blue: 250 / 255, alpha: 1.0)
+            pinView!.pinTintColor = lightBlueColor
             pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
         }
         else {
@@ -209,32 +198,121 @@ class MapVC: UIViewController, MKMapViewDelegate {
     private func showErrorAlert(title: String, msg: String, type: String?) {
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .Alert)
         let action = UIAlertAction(title: "Ok", style: .Default, handler: nil)
+        alert.addAction(action)
         if let type = type {
             let retry = UIAlertAction(title: "Retry", style: .Default) { (action) in
                 if type == "user" {
-                    self.getUserInformation({ (success) in
-                        if !success {
-                            print(1)
-                            self.showErrorAlert("User Information Couldn't Be Loaded", msg: "You are unable to post a pin.", type: "user")
-                        }
-                    })
+                    self.refreshData(true)
                 } else if type == "locations" {
-                    self.getStudentLocations({ (success) in
-                        if !success {
-                            print(0)
-                            self.showErrorAlert("Student Locations Couldn't Be Loaded", msg: "You are unable to view student locations.", type: "locations")
-                        }
-                    })
+                    self.refreshData(false)
                 }
             }
             alert.addAction(retry)
         }
-        alert.addAction(action)
         performUIUpdatesOnMain { 
             self.presentViewController(alert, animated: true, completion: nil)
         }
     }
     
+    private func showNavigatioBar(loading: Bool, post: Bool) {
+        
+        var showNav = [UIBarButtonItem]()
+        
+        let logoutBarButton = UIBarButtonItem(title: "LOGOUT", style: .Done, target: self, action: #selector(logoutAccount))
+        
+        if loading {
+            let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+            loadingIndicator.frame = CGRectMake(0, 0, 26, 30)
+            loadingIndicator.startAnimating()
+            let loadingButton = UIBarButtonItem()
+            loadingButton.customView = loadingIndicator
+            
+            showNav.append(loadingButton)
+        } else {
+            let refreshImage = UIImage(named: "Refresh.png")
+            let refreshButton = UIButton()
+            refreshButton.setImage(refreshImage, forState: .Normal)
+            refreshButton.frame = CGRectMake(0, 0, 26, 30)
+            refreshButton.addTarget(self, action: #selector(refreshData), forControlEvents: .TouchUpInside)
+            let refreshBarButton = UIBarButtonItem()
+            refreshBarButton.customView = refreshButton
+            
+            let postImage = UIImage(named: "post.png")
+            let postButton = UIButton()
+            postButton.setImage(postImage, forState: .Normal)
+            postButton.frame = CGRectMake(0, 0, 26, 30)
+            postButton.addTarget(self, action: #selector(postLocation), forControlEvents: .TouchUpInside)
+            let postBarButton = UIBarButtonItem()
+            postBarButton.customView = postButton
+            
+            let fixedSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: nil, action: nil)
+            fixedSpace.width = 26.0
+            
+            showNav.append(refreshBarButton)
+            showNav.append(fixedSpace)
+            showNav.append(postBarButton)
+            
+            if !post {
+                postBarButton.enabled = post
+            } else {
+                postBarButton.enabled = post
+            }
+        }
+        
+        tabBarController?.navigationItem.leftBarButtonItem = logoutBarButton
+        tabBarController?.navigationItem.rightBarButtonItems = showNav
+    }
+    
+    func refreshData(skipLocations: Bool) {
+        
+        showNavigatioBar(true, post: false)
+        
+        var hasName = true
+        
+        if DataService.sharedInstance.userFirstName == "not_authorized" || DataService.sharedInstance.userLastName == "not_authorized" {
+            hasName = false
+        }
+        
+        if !skipLocations {
+            getStudentLocations { (success) in
+                performUIUpdatesOnMain {
+                    if success {
+                        if hasName {
+                            self.showNavigatioBar(false, post: true)
+                        } else {
+                            self.showNavigatioBar(false, post: false)
+                        }
+                        self.setStudentLocationPins()
+                        NSNotificationCenter.defaultCenter().postNotificationName("newData", object: nil)
+                    } else {
+                        self.showErrorAlert("Student Locations Couldn't Be Loaded", msg: "You are unable to view student locations.", type: "locations")
+                        self.showNavigatioBar(false, post: false)
+                    }
+                }
+            }
+        }
+        
+        if !hasName {
+            getUserInformation { (success) in
+                performUIUpdatesOnMain {
+                    if success {
+                        self.showNavigatioBar(false, post: true)
+                    } else {
+                        self.showErrorAlert("User Information Couldn't Be Loaded", msg: "You are unable to post a pin.", type: "user")
+                        self.showNavigatioBar(false, post: false)
+                    }
+                }
+            }
+        }
+    }
+    
+    func postLocation() {
+        
+    }
+    
+    func logoutAccount() {
+        print("OUT")
+    }
     
 
 }

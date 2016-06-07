@@ -28,18 +28,26 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="JvN-wj-hyn">
-                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="JvN-wj-hyn" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="7xX-Yo-u6I"/>
+                            <constraint firstAttribute="bottom" secondItem="JvN-wj-hyn" secondAttribute="bottom" id="8vc-j5-zdR"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="JvN-wj-hyn" secondAttribute="bottom" id="SBh-tX-l49"/>
+                            <constraint firstItem="JvN-wj-hyn" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="lmX-Bn-7T4"/>
                             <constraint firstAttribute="trailing" secondItem="JvN-wj-hyn" secondAttribute="trailing" id="qeA-25-Fas"/>
                             <constraint firstItem="JvN-wj-hyn" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="wda-57-1N7"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="7xX-Yo-u6I"/>
+                                <exclude reference="SBh-tX-l49"/>
+                            </mask>
+                        </variation>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Map" id="pW2-tM-j0f"/>
+                    <tabBarItem key="tabBarItem" title="Map" image="map_unselected" selectedImage="map_selected" id="pW2-tM-j0f"/>
                     <connections>
                         <outlet property="mapView" destination="JvN-wj-hyn" id="rUF-UV-WBx"/>
                         <segue destination="c8C-b7-fMc" kind="presentation" identifier="loginScreen" id="Rf2-FI-zSd"/>
@@ -85,7 +93,7 @@
                             <constraint firstItem="QVn-TH-G6I" firstAttribute="top" secondItem="udy-Af-MOC" secondAttribute="bottom" id="t2K-Ed-rvF"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="List" id="kPt-4T-MgX"/>
+                    <tabBarItem key="tabBarItem" title="List" image="list_unselected" selectedImage="list_selected" id="kPt-4T-MgX"/>
                     <connections>
                         <segue destination="GJG-Vk-pxf" kind="presentation" identifier="addLocationList" id="emC-E9-mpu"/>
                     </connections>
@@ -281,6 +289,8 @@
                     <tabBar key="tabBar" contentMode="scaleToFill" id="Lhp-1Y-juP">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="selectedImageTintColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                     </tabBar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="cQV-TF-t6b"/>
@@ -295,7 +305,11 @@
     <resources>
         <image name="background" width="375" height="667"/>
         <image name="facebooklogo" width="15" height="28"/>
+        <image name="list_selected" width="24" height="22"/>
+        <image name="list_unselected" width="24" height="22"/>
         <image name="logo" width="242" height="56"/>
+        <image name="map_selected" width="27" height="24"/>
+        <image name="map_unselected" width="27" height="24"/>
         <image name="udacitylogo" width="28" height="28"/>
     </resources>
     <inferredMetricsTieBreakers>

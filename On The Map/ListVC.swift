@@ -13,7 +13,12 @@ class ListVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName: lightBlueColor], forState: .Selected)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(reloadData), name: "newData", object: nil)
+    }
+    
+    func reloadData() {
         
     }
-
 }

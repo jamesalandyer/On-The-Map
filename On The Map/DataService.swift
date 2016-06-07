@@ -13,8 +13,8 @@ class DataService {
     static let sharedInstance = DataService()
     
     private var _userId: String = NSUserDefaults.standardUserDefaults().stringForKey("user") ?? "not_authorized"
-    private var _userFirstName: String = NSUserDefaults.standardUserDefaults().stringForKey("firstName") ?? "not_authorized"
-    private var _userLastName: String = NSUserDefaults.standardUserDefaults().stringForKey("lastName") ?? "not_authorized"
+    private var _userFirstName: String = "not_authorized"
+    private var _userLastName: String = "not_authorized"
     private var _studentLocations = [StudentInformation]()
     
     var userId: String {
@@ -31,7 +31,7 @@ class DataService {
             return _userFirstName
         }
         set {
-            NSUserDefaults.standardUserDefaults().setValue(newValue, forKey: "firstName")
+            _userFirstName = newValue
         }
     }
     
@@ -40,7 +40,7 @@ class DataService {
             return _userLastName
         }
         set {
-            NSUserDefaults.standardUserDefaults().setValue(newValue, forKey: "lastName")
+            _userLastName = newValue
         }
     }
     
@@ -51,6 +51,10 @@ class DataService {
         set {
             _studentLocations.append(newValue[0])
         }
+    }
+    
+    func emptyStudentLocations() {
+        _studentLocations = [StudentInformation]()
     }
     
 }
