@@ -12,9 +12,9 @@ class DataService {
     
     static let sharedInstance = DataService()
     
-    private var _userId: String = NSUserDefaults.standardUserDefaults().stringForKey("user") ?? "not_authorized"
-    private var _userFirstName: String = "not_authorized"
-    private var _userLastName: String = "not_authorized"
+    private var _userId: String = NSUserDefaults.standardUserDefaults().stringForKey("user") ?? FIELD_EMPTY
+    private var _userFirstName: String = FIELD_EMPTY
+    private var _userLastName: String = FIELD_EMPTY
     private var _studentLocations = [StudentInformation]()
     
     var userId: String {

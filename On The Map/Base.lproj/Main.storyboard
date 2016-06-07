@@ -18,7 +18,7 @@
         <!--Map-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="MapVC" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Map" id="BYZ-38-t0r" customClass="MapVC" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -61,7 +61,7 @@
         <!--List-->
         <scene sceneID="hHY-yN-jJ0">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Slw-wD-1aS" customClass="ListVC" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="List" automaticallyAdjustsScrollViewInsets="NO" id="Slw-wD-1aS" customClass="ListVC" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="udy-Af-MOC"/>
                         <viewControllerLayoutGuide type="bottom" id="R3F-Ra-aZu"/>
@@ -70,17 +70,58 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="QVn-TH-G6I">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="49" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="QVn-TH-G6I">
                                 <rect key="frame" x="20" y="64" width="560" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="separatorColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="aLQ-Sl-HPH">
-                                        <rect key="frame" x="0.0" y="28" width="560" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="StudentCell" rowHeight="49" id="aLQ-Sl-HPH" customClass="StudentCell" customModule="On_The_Map" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="560" height="49"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aLQ-Sl-HPH" id="rVh-NM-HSf">
-                                            <rect key="frame" x="0.0" y="0.0" width="560" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="560" height="48.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="post" translatesAutoresizingMaskIntoConstraints="NO" id="sbf-rY-NLF">
+                                                    <rect key="frame" x="8" y="8" width="29" height="33"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="29" id="6Zg-HG-mpE"/>
+                                                        <constraint firstAttribute="height" constant="33" id="krv-eg-M5o"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Student Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="4v6-fH-jvv">
+                                                    <rect key="frame" x="45" y="8" width="211" height="33"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="211" id="98T-yh-UxS"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="23"/>
+                                                    <color key="textColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="wAT-7o-Yj7">
+                                                    <rect key="frame" x="264" y="8" width="288" height="33"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
+                                                    <color key="textColor" red="0.2666666667" green="0.2666666667" blue="0.2666666667" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="wAT-7o-Yj7" firstAttribute="top" secondItem="rVh-NM-HSf" secondAttribute="topMargin" id="1v4-X1-NOd"/>
+                                                <constraint firstItem="wAT-7o-Yj7" firstAttribute="trailing" secondItem="rVh-NM-HSf" secondAttribute="trailingMargin" id="2gV-Up-6UR"/>
+                                                <constraint firstItem="wAT-7o-Yj7" firstAttribute="leading" secondItem="4v6-fH-jvv" secondAttribute="trailing" constant="8" id="Cgp-1e-3cO"/>
+                                                <constraint firstItem="4v6-fH-jvv" firstAttribute="top" secondItem="rVh-NM-HSf" secondAttribute="topMargin" id="EKU-rh-Ke7"/>
+                                                <constraint firstItem="4v6-fH-jvv" firstAttribute="bottom" secondItem="rVh-NM-HSf" secondAttribute="bottomMargin" id="T2z-ev-cGc"/>
+                                                <constraint firstItem="sbf-rY-NLF" firstAttribute="leading" secondItem="rVh-NM-HSf" secondAttribute="leadingMargin" id="TcU-Gl-sVV"/>
+                                                <constraint firstItem="wAT-7o-Yj7" firstAttribute="bottom" secondItem="rVh-NM-HSf" secondAttribute="bottomMargin" id="cg9-Nv-1Vs"/>
+                                                <constraint firstItem="4v6-fH-jvv" firstAttribute="leading" secondItem="sbf-rY-NLF" secondAttribute="trailing" constant="8" id="dsi-hM-kGW"/>
+                                                <constraint firstItem="sbf-rY-NLF" firstAttribute="top" secondItem="rVh-NM-HSf" secondAttribute="topMargin" id="iu0-pc-IwA"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="locationImageView" destination="sbf-rY-NLF" id="p8n-5i-dUT"/>
+                                            <outlet property="studentLocationLabel" destination="wAT-7o-Yj7" id="wwi-H4-8bq"/>
+                                            <outlet property="studentNameLabel" destination="4v6-fH-jvv" id="Mcm-S4-5ZV"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -95,7 +136,9 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="List" image="list_unselected" selectedImage="list_selected" id="kPt-4T-MgX"/>
                     <connections>
+                        <outlet property="tableView" destination="QVn-TH-G6I" id="9UR-Xl-JJ2"/>
                         <segue destination="GJG-Vk-pxf" kind="presentation" identifier="addLocationList" id="emC-E9-mpu"/>
+                        <segue destination="c8C-b7-fMc" kind="presentation" identifier="logoutScreen" id="pYW-8r-LeS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l74-Sb-cGD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -310,9 +353,11 @@
         <image name="logo" width="242" height="56"/>
         <image name="map_selected" width="27" height="24"/>
         <image name="map_unselected" width="27" height="24"/>
+        <image name="post" width="29" height="33"/>
         <image name="udacitylogo" width="28" height="28"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="92b-dN-HhL"/>
+        <segue reference="emC-E9-mpu"/>
+        <segue reference="pYW-8r-LeS"/>
     </inferredMetricsTieBreakers>
 </document>

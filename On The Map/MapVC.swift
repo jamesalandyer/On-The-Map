@@ -37,7 +37,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
     }
     
     private func userIsLoggedIn() -> Bool {
-        if DataService.sharedInstance.userId == "not_authorized" {
+        if DataService.sharedInstance.userId == FIELD_EMPTY {
             return false
         }
         
@@ -45,7 +45,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
     }
     
     private func hasUserInformation() -> Bool {
-        if DataService.sharedInstance.userFirstName != "not_authorized" || DataService.sharedInstance.userLastName != "not_authorized" {
+        if DataService.sharedInstance.userFirstName == FIELD_EMPTY || DataService.sharedInstance.userLastName == FIELD_EMPTY {
             return false
         }
         
@@ -269,7 +269,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
         
         var hasName = true
         
-        if DataService.sharedInstance.userFirstName == "not_authorized" || DataService.sharedInstance.userLastName == "not_authorized" {
+        if DataService.sharedInstance.userFirstName == FIELD_EMPTY || DataService.sharedInstance.userLastName == FIELD_EMPTY {
             hasName = false
         }
         
@@ -291,8 +291,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 }
             }
         }
-        
-        if !hasName {
+        if !hasName && userIsLoggedIn() {
             getUserInformation { (success) in
                 performUIUpdatesOnMain {
                     if success {
@@ -307,11 +306,28 @@ class MapVC: UIViewController, MKMapViewDelegate {
     }
     
     func postLocation() {
+        let current = "\(tabBarController?.selectedViewController)"
+        
+        if current.containsString("MapVC") {
+            performSegueWithIdentifier("addLocationMap", sender: nil)
+        } else {
+            NSNotificationCenter.defaultCenter().postNotificationName("post", object: nil)
+        }
         
     }
     
     func logoutAccount() {
-        print("OUT")
+        if FBSDKAccessToken.currentAccessToken() != nil {
+            FBSDKLoginManager().logOut()
+        }
+        NSUserDefaults.standardUserDefaults().removeObjectForKey("user")
+        let current = "\(tabBarController?.selectedViewController)"
+        
+        if current.containsString("MapVC") {
+            performSegueWithIdentifier("loginScreen", sender: nil)
+        } else {
+            NSNotificationCenter.defaultCenter().postNotificationName("logout", object: nil)
+        }
     }
     
 

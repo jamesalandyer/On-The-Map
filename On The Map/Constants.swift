@@ -8,6 +8,8 @@
 
 import Foundation
 
+let FIELD_EMPTY = "field_empty"
+
 let lightBlueColor = UIColor(red: 90 / 255, green: 200 / 255, blue: 250 / 255, alpha: 1.0)
 
 func performUIUpdatesOnMain(updates: () -> Void) {
