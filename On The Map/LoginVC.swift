@@ -10,13 +10,17 @@ import UIKit
 
 class LoginVC: UIViewController, UITextFieldDelegate {
     
+    //Outlets
     @IBOutlet weak var emailAddressTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var udacityLoginButton: CustomButton!
     @IBOutlet weak var udacitySignupButton: UIButton!
     @IBOutlet weak var facebookLoginButton: CustomButton!
     
+    //Properties
     let facebookReadPermissions = ["public_profile", "email"]
+    
+    //MARK: - Stack
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +32,9 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(animated: Bool) {
         setUIEnabled(true)
     }
-
+    
+    //MARK: - Actions
+    
     @IBAction func udacityLoginButtonPressed(sender: AnyObject) {
         
         guard let emailAddress = emailAddressTextField.text where emailAddress != "" && isValidEmail(emailAddress) else {
@@ -43,9 +49,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         
         setUIEnabled(false)
         
-        let jsonBody = "{\"\(UdacityClient.JSONBodyKeys.Udacity)\": {\"\(UdacityClient.JSONBodyKeys.Username)\": \"\(emailAddress)\", \"\(UdacityClient.JSONBodyKeys.Password)\": \"\(password)\"}}"
-        
         let parameter = UdacityClient.Methods.Session
+        let jsonBody = "{\"\(UdacityClient.JSONBodyKeys.Udacity)\": {\"\(UdacityClient.JSONBodyKeys.Username)\": \"\(emailAddress)\", \"\(UdacityClient.JSONBodyKeys.Password)\": \"\(password)\"}}"
         
         UdacityClient.sharedInstance().taskForPOSTMethod(parameter, jsonBody: jsonBody) { (result, error) in
             
@@ -77,6 +82,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
             }
             
             DataService.sharedInstance.userId = user
+            
             performUIUpdatesOnMain {
                 self.dismissViewControllerAnimated(true, completion: nil)
             }
@@ -103,6 +109,13 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         }
     }
     
+    //MARK: - UI
+    
+    /**
+    Sets the UI for the login screen for both enabling and to change the alpha.
+     
+    - Parameter enable: A Bool of whether to enable the UI.
+    */
     private func setUIEnabled(enable: Bool) {
         emailAddressTextField.enabled = enable
         passwordTextField.enabled = enable
@@ -112,11 +125,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         
         var alpha: CGFloat!
         
-        if enable {
-            alpha = 1.0
-        } else {
-            alpha = 0.5
-        }
+        alpha = enable ? 1.0 : 0.5
         
         emailAddressTextField.alpha = alpha
         passwordTextField.alpha = alpha
@@ -125,12 +134,25 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         facebookLoginButton.alpha = alpha
     }
     
+    /**
+     Checks whether a string is a valid email address.
+     
+     - Parameter testStr: The string that needs to be tested.
+     
+     - Returns: A Bool whether it is valid.
+     */
     private func isValidEmail(testStr: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluateWithObject(testStr)
     }
     
+    /**
+     Shows an alert to the user of an error.
+     
+     - Parameter title: The header of the alert.
+     - Parameter msg: The message of the alert.
+     */
     private func showErrorAlert(title: String, msg: String) {
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .Alert)
         let action = UIAlertAction(title: "Ok", style: .Default, handler: nil)
@@ -138,6 +160,13 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         presentViewController(alert, animated: true, completion: nil)
     }
     
+    /**
+     Shows an alert to the user of an error.
+     
+     - Parameter callingViewController: The ViewController that is calling the method.
+     - Parameter successBlock: Handles the code to be executed when the request is successful.
+     - Parameter andFailure: Handles the code to be executed when the request has an error.
+     */
     private func loginToFacebookWithSuccess(callingViewController: UIViewController, successBlock: () -> (), andFailure failureBlock: (NSError?) -> ()) {
         
         if FBSDKAccessToken.currentAccessToken() != nil {
@@ -201,10 +230,14 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         })
     }
     
+    //MARK: - TextField
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
+    
+    //MARK: - Touches
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         emailAddressTextField.resignFirstResponder()

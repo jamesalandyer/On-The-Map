@@ -66,10 +66,16 @@ class DataService {
         }
     }
     
+    /**
+    Empties out the student locations that the app has stored.
+    */
     func emptyStudentLocations() {
         _studentLocations = [StudentInformation]()
     }
     
+    /**
+     Logs the user out by deleteing the user id and marking them as not being logged in.
+     */
     func logoutUser() {
         NSUserDefaults.standardUserDefaults().removeObjectForKey("user")
         _userLoggedIn = false

@@ -14,9 +14,18 @@ class UdacityClient: NSObject {
     
     var session = NSURLSession.sharedSession()
     
-    func taskForPOSTMethod(parameter: String, jsonBody: String, completionHandlerForPost: CompletionHandler) -> NSURLSessionDataTask {
+    /**
+     Sends a request for information to udacity.
+     
+     - Parameter method: The type of request being sent to parse.
+     - Parameter jsonBody: The body of the request being sent to udacity.
+     - Parameter completionHandlerForPost: Specify what to do once the data comes back.
+     
+     - Returns: NSURLSessionDataTask of the task that was ran.
+     */
+    func taskForPOSTMethod(method: String, jsonBody: String, completionHandlerForPost: CompletionHandler) -> NSURLSessionDataTask {
     
-        let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameter))
+        let request = NSMutableURLRequest(URL: udacityURLFromMethod(method))
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -54,9 +63,17 @@ class UdacityClient: NSObject {
         return task
     }
     
-    func taskForDELETEMethod(parameter: String, completionHandlerForDelete: CompletionHandler) -> NSURLSessionDataTask {
+    /**
+     Sends a request to delete a session from udacity.
+     
+     - Parameter method: The method to be added to the path of the request.
+     - Parameter completionHandlerForDelete: Specify what to do once the data comes back.
+     
+     - Returns: NSURLSessionDataTask of the task that was ran.
+     */
+    func taskForDELETEMethod(method: String, completionHandlerForDelete: CompletionHandler) -> NSURLSessionDataTask {
         
-        let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameter))
+        let request = NSMutableURLRequest(URL: udacityURLFromMethod(method))
         request.HTTPMethod = "DELETE"
         var xsrfCookie: NSHTTPCookie? = nil
         let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
@@ -86,9 +103,17 @@ class UdacityClient: NSObject {
         return task
     }
     
-    func taskForGETMethod(parameter: String, completionHandlerForGET: CompletionHandler) -> NSURLSessionDataTask {
+    /**
+     Sends a request for information to udacity.
+     
+     - Parameter method: The method to be added to the path of the request.
+     - Parameter completionHandlerForGET: Specify what to do once the data comes back.
+     
+     - Returns: NSURLSessionDataTask of the task that was ran.
+     */
+    func taskForGETMethod(method: String, completionHandlerForGET: CompletionHandler) -> NSURLSessionDataTask {
         
-        let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameter))
+        let request = NSMutableURLRequest(URL: udacityURLFromMethod(method))
         
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
@@ -104,6 +129,12 @@ class UdacityClient: NSObject {
         return task
     }
     
+    /**
+     Converts the data to be readable by Swift.
+     
+     - Parameter data: The data being converted.
+     - Parameter completionHandlerForConvertData: Specify what to do once the data is done.
+     */
     private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: CompletionHandler) {
         
         var parsedResult: AnyObject!
@@ -118,16 +149,28 @@ class UdacityClient: NSObject {
         completionHandlerForConvertData(result: parsedResult, error: nil)
     }
     
-    private func udacityURLFromParameters(parameter: String) -> NSURL {
+    /**
+     Sets up the URL.
+     
+     - Parameter method: The method to add to the end of the path.
+     
+     - Returns: NSURL that was configured.
+     */
+    private func udacityURLFromMethod(method: String) -> NSURL {
         
         let components = NSURLComponents()
         components.scheme = UdacityClient.Constants.ApiScheme
         components.host = UdacityClient.Constants.ApiHost
-        components.path = UdacityClient.Constants.ApiPath + parameter
+        components.path = UdacityClient.Constants.ApiPath + method
         
         return components.URL!
     }
     
+    /**
+     Cretaes a shared instnace of the class.
+     
+     - Returns: UdacityClient.
+     */
     class func sharedInstance() -> UdacityClient {
         struct Singleton {
             static var sharedInstance = UdacityClient()

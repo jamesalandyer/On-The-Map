@@ -10,10 +10,14 @@ import UIKit
 import MapKit
 
 class MapVC: UIViewController, MKMapViewDelegate {
-
+    
+    //Outlets
     @IBOutlet weak var mapView: MKMapView!
     
+    //Properties
     var annotations = [MKPointAnnotation]()
+    
+    //MARK: - Stack
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +40,13 @@ class MapVC: UIViewController, MKMapViewDelegate {
         }
     }
     
+    //MARK: - Information Check
+    
+    /**
+     Checks if the app has the users first and last name stored.
+     
+     - Returns Bool: A Bool of whether we have both the first and last name.
+     */
     private func hasUserInformation() -> Bool {
         if DataService.sharedInstance.userFirstName == FIELD_EMPTY || DataService.sharedInstance.userLastName == FIELD_EMPTY {
             return false
@@ -44,6 +55,11 @@ class MapVC: UIViewController, MKMapViewDelegate {
         return true
     }
     
+    /**
+     Checks if the app has student location information stored.
+     
+     - Returns Bool: A Bool of whether we have student location information.
+     */
     private func hasLocationInformation() -> Bool {
         if DataService.sharedInstance.studentLocations.count == 0 {
             return false
@@ -52,6 +68,14 @@ class MapVC: UIViewController, MKMapViewDelegate {
         return true
     }
     
+    //MARK: - Getting Infromation
+    
+    /**
+     Gets the user information from Udacity.
+     
+     - Parameter completed: Handles the code to be executed after the request is complete.
+     - Parameter success: A Bool of whether it was successful or not.
+     */
     private func getUserInformation(completed: (success: Bool) -> Void) {
         UdacityClient.sharedInstance().taskForGETMethod("\(UdacityClient.Methods.User)/\(DataService.sharedInstance.userId)") { (result, error) in
             if error == nil {
@@ -86,6 +110,12 @@ class MapVC: UIViewController, MKMapViewDelegate {
         }
     }
     
+    /**
+     Gets student locations from Udacity.
+     
+     - Parameter completed: Handles the code to be executed after the request is complete.
+     - Parameter success: A Bool of whether it was successful or not.
+     */
     private func getStudentLocations(completed: (success: Bool) -> Void) {
         
         DataService.sharedInstance.emptyStudentLocations()
@@ -109,6 +139,13 @@ class MapVC: UIViewController, MKMapViewDelegate {
         }
     }
     
+    /**
+     Creates an array student locations and stores it.
+     
+     - Parameter students: Takes an array of dictionaries.
+     - Parameter completed: Handles the code to be executed after the request is complete.
+     - Parameter success: A Bool of whether it was successful or not.
+     */
     private func createStudentLocationsArray(students: [[String: AnyObject]], completed: (success: Bool) -> Void) {
         
         for student in students {
@@ -124,6 +161,63 @@ class MapVC: UIViewController, MKMapViewDelegate {
         
     }
     
+    /**
+     Refreshes data for user first and last name and for student loactions.
+     
+     - Parameter skipLocations: A Bool whether to skip or download student loacations.
+     */
+    func refreshData(skipLocations: Bool) {
+        
+        showNavigatioBar(true, post: false)
+        
+        var hasName = true
+        
+        if DataService.sharedInstance.userFirstName == FIELD_EMPTY || DataService.sharedInstance.userLastName == FIELD_EMPTY {
+            hasName = false
+        }
+        
+        if !skipLocations {
+            getStudentLocations { (success) in
+                performUIUpdatesOnMain {
+                    if success {
+                        //The app must have the users name if they want to post a location
+                        if hasName {
+                            self.showNavigatioBar(false, post: true)
+                        } else {
+                            self.showNavigatioBar(false, post: false)
+                        }
+                        
+                        self.setStudentLocationPins()
+                        //Alert ListVC of new data
+                        NSNotificationCenter.defaultCenter().postNotificationName("newData", object: nil)
+                    } else {
+                        self.showErrorAlert("Student Locations Couldn't Be Loaded", msg: "You are unable to view student locations.", type: "locations")
+                        self.showNavigatioBar(false, post: false)
+                    }
+                }
+            }
+        }
+        
+        if !hasName && DataService.sharedInstance.userLoggedIn {
+            getUserInformation { (success) in
+                performUIUpdatesOnMain {
+                    //The app must have the users name if they want to post a location
+                    if success {
+                        self.showNavigatioBar(false, post: true)
+                    } else {
+                        self.showErrorAlert("User Information Couldn't Be Loaded", msg: "You are unable to post a pin.", type: "user")
+                        self.showNavigatioBar(false, post: false)
+                    }
+                }
+            }
+        }
+    }
+    
+    //MARK: - MapView
+    
+    /**
+     Sets the student location pins on the map.
+     */
     private func setStudentLocationPins() {
         let locations = DataService.sharedInstance.studentLocations
         
@@ -187,6 +281,15 @@ class MapVC: UIViewController, MKMapViewDelegate {
         }
     }
     
+    //MARK: - Adjusting UI
+    
+    /**
+     Shows an error alert and allows the user to choose whether to retry.
+     
+     - Parameter title: The header of the error alert.
+     - Parameter msg: The message of the error alert.
+     - Parameter type: Either user or locations and specifies what to do when the user chooses to retry request.
+     */
     private func showErrorAlert(title: String, msg: String, type: String?) {
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .Alert)
         let action = UIAlertAction(title: "Ok", style: .Default, handler: nil)
@@ -206,6 +309,14 @@ class MapVC: UIViewController, MKMapViewDelegate {
         }
     }
     
+    //MARK: - Navigation Bar
+    
+    /**
+     Sets up what the navigation bar looks like.
+     
+     - Parameter loading: A Bool of whether the navigation bar should be in loading mode.
+     - Parameter post: A Bool whether the user should be able to post (The user can't post without a first and last name).
+     */
     private func showNavigatioBar(loading: Bool, post: Bool) {
         
         var showNav = [UIBarButtonItem]()
@@ -255,69 +366,37 @@ class MapVC: UIViewController, MKMapViewDelegate {
         tabBarController?.navigationItem.rightBarButtonItems = showNav
     }
     
-    func refreshData(skipLocations: Bool) {
-        
-        showNavigatioBar(true, post: false)
-        
-        var hasName = true
-        
-        if DataService.sharedInstance.userFirstName == FIELD_EMPTY || DataService.sharedInstance.userLastName == FIELD_EMPTY {
-            hasName = false
-        }
-        
-        if !skipLocations {
-            getStudentLocations { (success) in
-                performUIUpdatesOnMain {
-                    if success {
-                        if hasName {
-                            self.showNavigatioBar(false, post: true)
-                        } else {
-                            self.showNavigatioBar(false, post: false)
-                        }
-                        self.setStudentLocationPins()
-                        NSNotificationCenter.defaultCenter().postNotificationName("newData", object: nil)
-                    } else {
-                        self.showErrorAlert("Student Locations Couldn't Be Loaded", msg: "You are unable to view student locations.", type: "locations")
-                        self.showNavigatioBar(false, post: false)
-                    }
-                }
-            }
-        }
-        if !hasName && DataService.sharedInstance.userLoggedIn {
-            getUserInformation { (success) in
-                performUIUpdatesOnMain {
-                    if success {
-                        self.showNavigatioBar(false, post: true)
-                    } else {
-                        self.showErrorAlert("User Information Couldn't Be Loaded", msg: "You are unable to post a pin.", type: "user")
-                        self.showNavigatioBar(false, post: false)
-                    }
-                }
-            }
-        }
-    }
-    
+    /**
+     Shows the post screen when the user clicks on post, if the user is in the list tab it will alert the tab to open the post screen.
+     */
     func postLocation() {
         let current = "\(tabBarController?.selectedViewController)"
         
         if current.containsString("MapVC") {
             performSegueWithIdentifier("addLocationMap", sender: nil)
         } else {
+            //Alert the ListVC to show the post screen
             NSNotificationCenter.defaultCenter().postNotificationName("post", object: nil)
         }
         
     }
     
+    /**
+     Warns the user they are about to logout and then logs the user out of facebook, udacity and deletes their user id from the app or if the user is in the list tab tells the view to ask to logout.
+     */
     func logoutAccount() {
         let current = "\(tabBarController?.selectedViewController)"
+        
         if current.containsString("MapVC") {
             let alert = UIAlertController(title: "Logging Out", message: "Are you sure you want to logout?", preferredStyle: .Alert)
             let action = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
             alert.addAction(action)
+            
             let retry = UIAlertAction(title: "Logout", style: .Destructive) { (action) in
                 if FBSDKAccessToken.currentAccessToken() != nil {
                     FBSDKLoginManager().logOut()
                 }
+                
                 DataService.sharedInstance.logoutUser()
                 
                 UdacityClient.sharedInstance().taskForDELETEMethod(UdacityClient.Methods.Session, completionHandlerForDelete: { (result, error) in
@@ -330,9 +409,12 @@ class MapVC: UIViewController, MKMapViewDelegate {
                     }
                 })
             }
+            
             alert.addAction(retry)
+            
             presentViewController(alert, animated: true, completion: nil)
         } else {
+            //Alert the ListVC to show the login screen
             NSNotificationCenter.defaultCenter().postNotificationName("logout", object: nil)
         }
     }

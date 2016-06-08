@@ -14,7 +14,15 @@ class ParseClient: NSObject {
     
     var session = NSURLSession.sharedSession()
     
-    func taskForGETMethod(parameters: [String: AnyObject], completionHandlerForPost: CompletionHandler) -> NSURLSessionDataTask {
+    /**
+     Sends a request for information to parse.
+     
+     - Parameter parameters: The parameters that specify the type of information we want back.
+     - Parameter completionHandlerForGet: Specify what to do once the data comes back.
+     
+     - Returns: NSURLSessionDataTask of the task that was ran.
+     */
+    func taskForGETMethod(parameters: [String: AnyObject], completionHandlerForGet: CompletionHandler) -> NSURLSessionDataTask {
         
         let request = NSMutableURLRequest(URL: parseURLFromParameters(parameters))
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
@@ -24,7 +32,7 @@ class ParseClient: NSObject {
             
             func sendError(error: String) {
                 let userInfo = [NSLocalizedDescriptionKey: error]
-                completionHandlerForPost(result: nil, error: NSError(domain: "taskForGETMethod", code: 1, userInfo: userInfo))
+                completionHandlerForGet(result: nil, error: NSError(domain: "taskForGETMethod", code: 1, userInfo: userInfo))
             }
             
             guard let data = data where error == nil else {
@@ -32,7 +40,7 @@ class ParseClient: NSObject {
                 return
             }
             
-            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForPost)
+            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGet)
         }
         
         task.resume()
@@ -40,6 +48,16 @@ class ParseClient: NSObject {
         return task
     }
     
+    /**
+     Sends a request for information to parse.
+     
+     - Parameter method: The type of request being sent to parse.
+     - Parameter jsonBody: The body of the request being sent to parse.
+     - Parameter path: (Optional) The path added to the request to specify a certain location.
+     - Parameter completionHandlerForPost: Specify what to do once the data comes back.
+     
+     - Returns: NSURLSessionDataTask of the task that was ran.
+     */
     func taskForPOSTMethod(method: String, jsonBody: String, path: String?, completionHandlerForPost: CompletionHandler) -> NSURLSessionDataTask {
         
         let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: (path ?? "")))
@@ -69,6 +87,12 @@ class ParseClient: NSObject {
         return task
     }
     
+    /**
+     Converts the data to be readable by Swift.
+     
+     - Parameter data: The data being converted.
+     - Parameter completionHandlerForConvertData: Specify what to do once the data is done.
+     */
     private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: CompletionHandler) {
         
         var parsedResult: AnyObject!
@@ -83,6 +107,14 @@ class ParseClient: NSObject {
         completionHandlerForConvertData(result: parsedResult, error: nil)
     }
     
+    /**
+     Sets up the URL.
+     
+     - Parameter parameters: (Optional) The information that is added to the end of the URL.
+     - Parameter withPathExtension: (Optional) The string that will be added to the path of the URL.
+     
+     - Returns: NSURL that was configured.
+     */
     private func parseURLFromParameters(parameters: [String: AnyObject]?, withPathExtension: String? = nil) -> NSURL {
         
         let components = NSURLComponents()
@@ -101,6 +133,11 @@ class ParseClient: NSObject {
         return components.URL!
     }
     
+    /**
+     Cretaes a shared instnace of the class.
+     
+     - Returns: ParseClient.
+     */
     class func sharedInstance() -> ParseClient {
         struct Singleton {
             static var sharedInstance = ParseClient()
