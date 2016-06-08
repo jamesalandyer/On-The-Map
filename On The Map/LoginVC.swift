@@ -52,7 +52,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         let parameter = UdacityClient.Methods.Session
         let jsonBody = "{\"\(UdacityClient.JSONBodyKeys.Udacity)\": {\"\(UdacityClient.JSONBodyKeys.Username)\": \"\(emailAddress)\", \"\(UdacityClient.JSONBodyKeys.Password)\": \"\(password)\"}}"
         
-        UdacityClient.sharedInstance().taskForPOSTMethod(parameter, jsonBody: jsonBody) { (result, error) in
+        UdacityClient.sharedInstance.taskForPOSTMethod(parameter, jsonBody: jsonBody) { (result, error) in
             
             func displayError(title: String, msg: String) {
                 performUIUpdatesOnMain {
@@ -62,7 +62,12 @@ class LoginVC: UIViewController, UITextFieldDelegate {
             }
             
             guard error == nil else {
-                displayError("Invalid Email Or Password", msg: "Please check your credentials and login again.")
+                if error!.userInfo.description.containsString("Your request returned a status code other than 2XX!") {
+                    displayError("Invalid Email Or Password", msg: "Please check your credentials and login again.")
+                } else {
+                    displayError("Request Timed Out", msg: "Please check your internet connection and login again.")
+                }
+                
                 return
             }
             
@@ -199,7 +204,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                     let parameter = UdacityClient.Methods.Session
                     let jsonBody = "{\"facebook_mobile\": {\"access_token\": \"\(fbToken)\"}}"
                     
-                    UdacityClient.sharedInstance().taskForPOSTMethod(parameter, jsonBody: jsonBody, completionHandlerForPost: { (result, error) in
+                    UdacityClient.sharedInstance.taskForPOSTMethod(parameter, jsonBody: jsonBody, completionHandlerForPost: { (result, error) in
                         if error != nil {
                             failureBlock(error)
                         } else {

@@ -77,7 +77,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
      - Parameter success: A Bool of whether it was successful or not.
      */
     private func getUserInformation(completed: (success: Bool) -> Void) {
-        UdacityClient.sharedInstance().taskForGETMethod("\(UdacityClient.Methods.User)/\(DataService.sharedInstance.userId)") { (result, error) in
+        UdacityClient.sharedInstance.taskForGETMethod("\(UdacityClient.Methods.User)/\(DataService.sharedInstance.userId)") { (result, error) in
             if error == nil {
                 guard let result = result else {
                     completed(success: false)
@@ -120,12 +120,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
         
         DataService.sharedInstance.emptyStudentLocations()
         
-        let parameters = [
-            "limit": 100,
-            "order": "-updatedAt"
-        ]
-        
-        ParseClient.sharedInstance().taskForGETMethod(parameters) { (result, error) in
+        ParseClient.sharedInstance.taskForGETMethod(ParseClient.Parameters.Recent100) { (result, error) in
             if error == nil {
                 guard let students = result["results"] as? [[String: AnyObject]] else {
                     completed(success: false)
@@ -399,7 +394,7 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 
                 DataService.sharedInstance.logoutUser()
                 
-                UdacityClient.sharedInstance().taskForDELETEMethod(UdacityClient.Methods.Session, completionHandlerForDelete: { (result, error) in
+                UdacityClient.sharedInstance.taskForDELETEMethod(UdacityClient.Methods.Session, completionHandlerForDelete: { (result, error) in
                     performUIUpdatesOnMain {
                         if error == nil {
                             self.performSegueWithIdentifier("loginScreen", sender: nil)

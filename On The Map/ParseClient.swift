@@ -10,6 +10,8 @@ import UIKit
 
 class ParseClient: NSObject {
     
+    static let sharedInstance = ParseClient()
+    
     typealias CompletionHandler = (result: AnyObject!, error: NSError?) -> Void
     
     var session = NSURLSession.sharedSession()
@@ -25,8 +27,8 @@ class ParseClient: NSObject {
     func taskForGETMethod(parameters: [String: AnyObject], completionHandlerForGet: CompletionHandler) -> NSURLSessionDataTask {
         
         let request = NSMutableURLRequest(URL: parseURLFromParameters(parameters))
-        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue(ParseClient.Parse.Id, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(ParseClient.Parse.Key, forHTTPHeaderField: "X-Parse-REST-API-Key")
         
         let task = session.dataTaskWithRequest(request) { data, response, error in
             
@@ -62,8 +64,8 @@ class ParseClient: NSObject {
         
         let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: (path ?? "")))
         request.HTTPMethod = method
-        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue(ParseClient.Parse.Id, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(ParseClient.Parse.Key, forHTTPHeaderField: "X-Parse-REST-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
         
@@ -131,18 +133,6 @@ class ParseClient: NSObject {
         }
         
         return components.URL!
-    }
-    
-    /**
-     Cretaes a shared instnace of the class.
-     
-     - Returns: ParseClient.
-     */
-    class func sharedInstance() -> ParseClient {
-        struct Singleton {
-            static var sharedInstance = ParseClient()
-        }
-        return Singleton.sharedInstance
     }
     
 }

@@ -9,6 +9,8 @@
 import UIKit
 
 class UdacityClient: NSObject {
+    
+    static let sharedInstance = UdacityClient()
 
     typealias CompletionHandler = (result: AnyObject!, error: NSError?) -> Void
     
@@ -164,18 +166,6 @@ class UdacityClient: NSObject {
         components.path = UdacityClient.Constants.ApiPath + method
         
         return components.URL!
-    }
-    
-    /**
-     Cretaes a shared instnace of the class.
-     
-     - Returns: UdacityClient.
-     */
-    class func sharedInstance() -> UdacityClient {
-        struct Singleton {
-            static var sharedInstance = UdacityClient()
-        }
-        return Singleton.sharedInstance
     }
     
 }

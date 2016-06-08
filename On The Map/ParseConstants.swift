@@ -19,4 +19,14 @@ extension ParseClient {
         static let Put = "PUT"
     }
     
+    struct Parse {
+        static let Id = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
+        static let Key = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
+    }
+    
+    struct Parameters {
+        static let UniqueKey = ["where": "{\"uniqueKey\":\"\(DataService.sharedInstance.userId)\"}"]
+        static let Recent100 = ["limit": 100, "order": "-updatedAt"]
+    }
+    
 }

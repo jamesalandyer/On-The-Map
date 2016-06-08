@@ -544,7 +544,7 @@
         <image name="udacitylogo" width="28" height="28"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="Rf2-FI-zSd"/>
         <segue reference="emC-E9-mpu"/>
-        <segue reference="pYW-8r-LeS"/>
     </inferredMetricsTieBreakers>
 </document>

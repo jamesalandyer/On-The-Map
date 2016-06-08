@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B42844F1D07C9EC0074D74F /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B42844E1D07C9EC0074D74F /* FBSDKCoreKit.framework */; };
 		2BA323091D038DE10001B749 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA323081D038DE10001B749 /* AppDelegate.swift */; };
 		2BA3230B1D038DE10001B749 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3230A1D038DE10001B749 /* MapVC.swift */; };
 		2BA3230E1D038DE10001B749 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2BA3230C1D038DE10001B749 /* Main.storyboard */; };
@@ -26,10 +27,10 @@
 		2BA323411D04D4AE0001B749 /* ParseConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA323401D04D4AE0001B749 /* ParseConstants.swift */; };
 		2BA323431D0500C90001B749 /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA323421D0500C90001B749 /* StudentInformation.swift */; };
 		2BA323451D0658080001B749 /* StudentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA323441D0658080001B749 /* StudentCell.swift */; };
-		2BC25DD81D0667C400D7D617 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC25DD71D0667C400D7D617 /* FBSDKCoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2B42844E1D07C9EC0074D74F /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		2BA323051D038DE00001B749 /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BA323081D038DE10001B749 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2BA3230A1D038DE10001B749 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
@@ -52,7 +53,6 @@
 		2BA323401D04D4AE0001B749 /* ParseConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseConstants.swift; sourceTree = "<group>"; };
 		2BA323421D0500C90001B749 /* StudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
 		2BA323441D0658080001B749 /* StudentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentCell.swift; sourceTree = "<group>"; };
-		2BC25DD71D0667C400D7D617 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +61,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BA323391D043E210001B749 /* FBSDKLoginKit.framework in Frameworks */,
-				2BC25DD81D0667C400D7D617 /* FBSDKCoreKit.framework in Frameworks */,
+				2B42844F1D07C9EC0074D74F /* FBSDKCoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,8 +151,8 @@
 				2BA323081D038DE10001B749 /* AppDelegate.swift */,
 				2BA323281D039B4E0001B749 /* Roboto-Bold.ttf */,
 				2BA3233A1D043F800001B749 /* On The Map-Bridging-Header.h */,
+				2B42844E1D07C9EC0074D74F /* FBSDKCoreKit.framework */,
 				2BA323371D043E210001B749 /* FBSDKLoginKit.framework */,
-				2BC25DD71D0667C400D7D617 /* FBSDKCoreKit.framework */,
 				2BA323141D038DE10001B749 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -394,6 +394,9 @@
 					"$(PROJECT_DIR)/On",
 					The,
 					Map,
+					"$(PROJECT_DIR)/On",
+					The,
+					Map,
 				);
 				INFOPLIST_FILE = "On The Map/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -411,6 +414,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PROJECT_DIR)/On",
+					The,
+					Map,
 					"$(PROJECT_DIR)/On",
 					The,
 					Map,

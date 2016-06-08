@@ -272,11 +272,7 @@ class LocationVC: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
      */
     private func checkIfPostExists(completed: (success: Bool) -> Void) {
         
-        let parameter = [
-            "where": "{\"uniqueKey\":\"\(DataService.sharedInstance.userId)\"}"
-        ]
-        
-        ParseClient.sharedInstance().taskForGETMethod(parameter) { (result, error) in
+        ParseClient.sharedInstance.taskForGETMethod(ParseClient.Parameters.UniqueKey) { (result, error) in
             if error != nil {
                 completed(success: false)
                 return
@@ -311,7 +307,7 @@ class LocationVC: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
         let student = StudentInformation(student: userInformation)
         let jsonBody = "{\"uniqueKey\": \"\(DataService.sharedInstance.userId)\", \"firstName\": \"\(student.firstName)\", \"lastName\": \"\(student.lastName)\",\"mapString\": \"\(student.mapString)\", \"mediaURL\": \"\(student.mediaURL)\",\"latitude\": \(student.latitude), \"longitude\": \(student.longitude)}"
         
-        ParseClient.sharedInstance().taskForPOSTMethod(method, jsonBody: jsonBody, path: (path ?? "")) { (result, error) in
+        ParseClient.sharedInstance.taskForPOSTMethod(method, jsonBody: jsonBody, path: (path ?? "")) { (result, error) in
             if error != nil {
                 completed(success: false)
                 return

@@ -13,17 +13,22 @@ class DataService {
     static let sharedInstance = DataService()
     
     private var _userLoggedIn = false
-    private var _userId: String = NSUserDefaults.standardUserDefaults().stringForKey("user") ?? FIELD_EMPTY
+    private var _userId: String = FIELD_EMPTY
     private var _userFirstName: String = FIELD_EMPTY
     private var _userLastName: String = FIELD_EMPTY
     private var _studentLocations = [StudentInformation]()
     
     var userId: String {
         get {
-           return _userId
+            if let user = NSUserDefaults.standardUserDefaults().stringForKey("user") {
+                return user
+            }
+            
+            return _userId
         }
         set {
             _userLoggedIn = true
+            _userId = newValue
             NSUserDefaults.standardUserDefaults().setValue(newValue, forKey: "user")
         }
     }

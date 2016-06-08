@@ -110,7 +110,7 @@ class ListVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             DataService.sharedInstance.logoutUser()
             
-            UdacityClient.sharedInstance().taskForDELETEMethod(UdacityClient.Methods.Session, completionHandlerForDelete: { (result, error) in
+            UdacityClient.sharedInstance.taskForDELETEMethod(UdacityClient.Methods.Session, completionHandlerForDelete: { (result, error) in
                 performUIUpdatesOnMain {
                     if error == nil {
                         self.performSegueWithIdentifier("logoutScreen", sender: nil)
